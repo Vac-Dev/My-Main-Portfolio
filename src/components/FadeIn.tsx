@@ -20,8 +20,7 @@ export default function FadeIn({ children, className = "" }: FadeInProps) {
     <div
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(12px)",
-        transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
+        transition: "opacity 0.2s ease-out",
       }}
       className={className}
     >

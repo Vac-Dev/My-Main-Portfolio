@@ -21,7 +21,7 @@ export default function Sidebar() {
 
       {/* Info items */}
       <div className="space-y-4">
-        <InfoItem icon={<Phone className="h-4 w-4" />} label="Phone" value="+27 79 502 5019" />
+        <InfoItem icon={<Phone className="h-4 w-4" />} label="Phone" value="+27 79 503 5019" />
         <InfoItem icon={<MapPin className="h-4 w-4" />} label="Location" value="Pretoria, South Africa" />
         <InfoItem icon={<Mail className="h-4 w-4" />} label="Email" value="kylenel46@gmail.com" />
       </div>

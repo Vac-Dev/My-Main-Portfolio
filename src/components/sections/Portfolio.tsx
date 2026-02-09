@@ -76,7 +76,7 @@ export default function Portfolio() {
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-foreground/10">
+    <div className="group rounded-xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-foreground/10 hover:shadow-md">
       <div className="flex items-start justify-between">
         <h3 className="text-base font-semibold text-foreground">{project.title}</h3>
         <div className="flex items-center gap-2">

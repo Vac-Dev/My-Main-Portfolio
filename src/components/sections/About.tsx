@@ -8,6 +8,7 @@ const techStack = [
   "Node.js",
   "ASP.NET",
   "PostgreSQL",
+  "n8n Automation",
 ];
 
 export default function About() {
@@ -42,7 +43,7 @@ export default function About() {
           <h3 className="mb-3 text-lg font-medium text-foreground">Technical Focus</h3>
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (
-              <Badge key={tech} variant="secondary" className="text-sm font-normal">
+              <Badge key={tech} variant="secondary" className="text-sm font-normal transition-transform duration-200 hover:scale-105">
                 {tech}
               </Badge>
             ))}

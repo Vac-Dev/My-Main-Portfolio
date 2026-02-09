@@ -119,7 +119,7 @@ function LandingContent() {
               </div>
             </div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 opacity-0 animate-hero-in">
               <div className="mb-6 h-px w-12 bg-white/20" />
               <h1 className="mb-4 text-5xl font-extralight tracking-tight text-white md:text-7xl lg:text-8xl">
                 Kyle Nel

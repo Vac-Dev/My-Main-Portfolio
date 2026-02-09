@@ -25,10 +25,10 @@ export default function Navbar({ activePage }: NavbarProps) {
               <button
                 key={item.id}
                 onClick={() => navigate(`/${item.id}`)}
-                className={`cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors ${
+                className={`cursor-pointer rounded-md px-3 py-1.5 text-sm transition-all duration-200 ${
                   activePage === item.id
                     ? "bg-accent text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "text-muted-foreground hover:text-foreground [@media(hover:hover)]:hover:scale-105"
                 }`}
               >
                 {item.label}

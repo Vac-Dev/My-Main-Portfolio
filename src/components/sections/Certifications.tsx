@@ -7,6 +7,8 @@ interface Certificate {
   issuer: string;
   date: string;
   downloadUrl?: string;
+  /** Shown instead of Download when certificate is not yet available */
+  note?: string;
 }
 
 const certificates: Certificate[] = [
@@ -14,19 +16,19 @@ const certificates: Certificate[] = [
     title: "BSc Computer & Information Sciences",
     issuer: "Varsity College — Pretoria Campus",
     date: "2025",
-    downloadUrl: "#",
+    note: "Contact me, Awaiting Degree Certificate",
   },
   {
     title: "CV",
     issuer: "Professional summary",
     date: "PDF",
-    downloadUrl: "/Kyle Nel Resume.pdf",
+    downloadUrl: "/documents/Kyle Nel Resume.pdf",
   },
   {
     title: "Academic Transcript",
     issuer: "Varsity College — Pretoria Campus",
     date: "2025",
-    downloadUrl: "/Academic Transcipt.pdf",
+    downloadUrl: "/documents/Academic Transcipt.pdf",
   },
 ];
 
@@ -45,7 +47,6 @@ export default function Certifications() {
           <CertificateItem key={index} cert={cert} />
         ))}
       </div>
-
     </section>
   );
 }
@@ -65,7 +66,9 @@ function CertificateItem({ cert }: { cert: Certificate }) {
         </div>
       </div>
 
-      {cert.downloadUrl && (
+      {cert.note ? (
+        <p className="shrink-0 text-sm text-muted-foreground">{cert.note}</p>
+      ) : cert.downloadUrl ? (
         <Button
           variant="ghost"
           size="sm"
@@ -77,7 +80,7 @@ function CertificateItem({ cert }: { cert: Certificate }) {
             <span className="hidden sm:inline">Download</span>
           </a>
         </Button>
-      )}
+      ) : null}
     </div>
   );
 }
