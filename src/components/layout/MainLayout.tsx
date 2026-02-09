@@ -7,7 +7,6 @@ import FadeIn from "@/components/FadeIn";
 
 export default function MainLayout() {
   const location = useLocation();
-  // Extract active page from pathname e.g. "/about" -> "about"
   const activePage = location.pathname.replace("/", "") || "about";
 
   return (

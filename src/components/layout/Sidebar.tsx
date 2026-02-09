@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { MapPin, Phone, Github, Linkedin, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -12,7 +13,9 @@ export default function Sidebar() {
             KN
           </div>
         </div>
-        <h2 className="text-lg font-semibold text-foreground">Kyle Nel</h2>
+        <Link to="/" className="text-lg font-semibold text-foreground transition-colors hover:underline">
+          Kyle Nel
+        </Link>
         <p className="text-sm text-muted-foreground">Full-Stack Developer</p>
         <p className="text-xs text-muted-foreground/80">Backend & APIs</p>
       </div>

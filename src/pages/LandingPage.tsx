@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ParallaxProvider, Parallax } from "react-scroll-parallax";
+import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 import { ChevronDown, Cloud } from "lucide-react";
 import reactSvg from "simple-icons/icons/react.svg?raw";
 import typescriptSvg from "simple-icons/icons/typescript.svg?raw";
@@ -34,56 +34,76 @@ const LANDING_SKILLS: SkillItem[] = [
 ];
 
 function SkillIcon({ svg, className }: { svg: string; className?: string }) {
-  // Ensure the icon uses currentColor (so our opacity/color styling applies).
   const normalized = svg.replace("<svg ", '<svg fill="currentColor" ');
   return <span className={className} dangerouslySetInnerHTML={{ __html: normalized }} aria-hidden />;
 }
 
-function LandingContent() {
+export default function LandingPage() {
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [exitOverlay, setExitOverlay] = useState(false);
   const hasNavigated = useRef(false);
-  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (hasNavigated.current) return;
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-
-      const fadeProgress = Math.min(scrollY / (windowHeight * 0.4), 1);
-      setOpacity(1 - fadeProgress);
-
-      if (scrollY > windowHeight * 0.5) {
+    if (hasNavigated.current || exitOverlay) return;
+    const wrapper = containerRef.current;
+    if (!wrapper || !(wrapper instanceof HTMLElement)) return;
+    const scrollable = wrapper.querySelector("div[style*='overflow']") ?? wrapper.firstElementChild;
+    const target = scrollable instanceof HTMLElement ? scrollable : null;
+    if (!target?.addEventListener) return;
+    const check = () => {
+      const { scrollTop, scrollHeight, clientHeight } = target;
+      const isScrollable = scrollHeight > clientHeight;
+      const isAtBottom = scrollHeight > 0 && scrollTop + clientHeight >= scrollHeight - 50;
+      if (isScrollable && isAtBottom) {
         hasNavigated.current = true;
-        navigate("/about");
+        setExitOverlay(true);
       }
     };
+    target.addEventListener("scroll", check, { passive: true });
+    return () => target.removeEventListener("scroll", check);
+  }, [exitOverlay]);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [navigate]);
-
-  const handleEnter = () => {
-    navigate("/about");
-  };
+  useEffect(() => {
+    if (!exitOverlay) return;
+    const t = setTimeout(() => navigate("/about", { replace: true }), 500);
+    return () => clearTimeout(t);
+  }, [exitOverlay, navigate]);
 
   return (
-    <div className="relative bg-[#0a0a0a]">
-      <div className="relative h-screen w-full overflow-hidden">
-        <Parallax speed={-20} className="absolute inset-0">
-          <div className="h-[120vh] w-full bg-[#0a0a0a]">
-            <div className="h-full w-full bg-[#0a0a0a]" />
-          </div>
-        </Parallax>
-
-        <div className="absolute inset-0 z-[1] bg-[#0a0a0a]/40" />
-
-        <Parallax speed={-5} className="absolute inset-0 z-[2]">
+    <div ref={containerRef} className="relative h-screen w-full">
+      <Parallax pages={3} style={{ top: "0", left: "0", width: "100%", height: "100%" }}>
+        {/* ----- Page 0: Background (starry, moves slow) ----- */}
+        <ParallaxLayer offset={0} speed={0.25} style={{ pointerEvents: "none" }}>
+          <div className="absolute inset-0 bg-background" />
+          {/* Light mode: subtle dark dots */}
           <div
-            className="relative flex h-screen flex-col items-center justify-center px-6 text-center transition-opacity duration-300"
-            style={{ opacity }}
-          >
-            {/* Floating skill icons (real tech logos) in a wide ring around the name */}
+            className="absolute inset-0 opacity-40 dark:hidden"
+            aria-hidden
+            style={{
+              backgroundImage: `radial-gradient(circle at 20% 30%, rgba(0,0,0,0.04) 0%, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(0,0,0,0.05) 0%, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(0,0,0,0.03) 0%, transparent 1px)`,
+              backgroundSize: "120px 120px, 80px 80px, 160px 160px",
+            }}
+          />
+          {/* Dark mode: subtle light dots */}
+          <div
+            className="absolute inset-0 hidden opacity-40 dark:block"
+            aria-hidden
+            style={{
+              backgroundImage: `radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04) 0%, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 1px)`,
+              backgroundSize: "120px 120px, 80px 80px, 160px 160px",
+            }}
+          />
+        </ParallaxLayer>
+
+        {/* ----- Page 0: Hero content (fixed feel, slight parallax) ----- */}
+        <ParallaxLayer offset={0} speed={0.1} className="flex items-center justify-center">
+          <div className="relative flex h-full w-full flex-col items-center justify-center px-6 text-center">
+            {/* Skill icons ring */}
             <div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
               aria-hidden
@@ -98,7 +118,7 @@ function LandingContent() {
                   return (
                     <span
                       key={skill.name}
-                      className="absolute flex items-center justify-center text-white/30 transition-colors hover:text-white/50 [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
+                      className="absolute flex items-center justify-center text-foreground/30 [&_svg]:h-5 [&_svg]:w-5 md:[&_svg]:h-6 md:[&_svg]:w-6"
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
@@ -120,39 +140,54 @@ function LandingContent() {
             </div>
 
             <div className="relative z-10 opacity-0 animate-hero-in">
-              <div className="mb-6 h-px w-12 bg-white/20" />
-              <h1 className="mb-4 text-5xl font-extralight tracking-tight text-white md:text-7xl lg:text-8xl">
+              <div className="mb-6 h-px w-12 bg-foreground/20" />
+              <h1 className="mb-4 text-5xl font-extralight tracking-tight text-foreground md:text-7xl lg:text-8xl">
                 Kyle Nel
               </h1>
-              <p className="mb-2 text-sm font-light tracking-[0.3em] text-white/50 uppercase md:text-base">
+              <p className="mb-2 text-sm font-light tracking-[0.3em] text-muted-foreground uppercase md:text-base">
                 Full-Stack · Backend & APIs
               </p>
-              <div className="mt-6 h-px w-12 bg-white/20" />
+              <div className="mt-6 h-px w-12 bg-foreground/20" />
+            </div>
+
+            <div className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 animate-bounce text-muted-foreground">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+                <ChevronDown className="h-5 w-5" />
+              </div>
             </div>
           </div>
-        </Parallax>
+        </ParallaxLayer>
 
-        <button
-          onClick={handleEnter}
-          className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 cursor-pointer animate-bounce text-white/30 transition-colors hover:text-white/60"
-          style={{ opacity }}
-        >
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-[10px] tracking-[0.2em] uppercase">Scroll</span>
-            <ChevronDown className="h-5 w-5" />
+        {/* ----- Page 1: Middle section (tagline / about me) ----- */}
+        <ParallaxLayer offset={1} speed={0.2} className="flex items-center justify-center">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-6 px-6 text-center">
+            <p className="max-w-md text-lg font-light tracking-wide text-foreground/80 md:text-xl">
+              Backend, APIs & automation. Building systems that give clients a clear picture.
+            </p>
+            <p className="max-w-lg text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              Aspiring 22-year-old building my company Skillance and learning as much as I can along the way — curious, hands-on, and focused on shipping things that work.
+            </p>
           </div>
-        </button>
-      </div>
+        </ParallaxLayer>
 
-      <div className="h-[60vh] bg-[#0a0a0a]" />
+        {/* ----- Page 2: End of parallax (scroll to fade into main site) ----- */}
+        <ParallaxLayer offset={2} speed={0} className="flex items-center justify-center">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center">
+            <p className="text-sm font-light tracking-[0.2em] text-muted-foreground uppercase">
+              Keep scrolling to enter
+            </p>
+            <ChevronDown className="h-5 w-5 animate-bounce text-muted-foreground/80" />
+          </div>
+        </ParallaxLayer>
+      </Parallax>
+
+      {/* Fade overlay when reaching end → then navigate */}
+      <div
+        className="pointer-events-none fixed inset-0 z-50 bg-background transition-opacity duration-500"
+        style={{ opacity: exitOverlay ? 1 : 0 }}
+        aria-hidden
+      />
     </div>
-  );
-}
-
-export default function LandingPage() {
-  return (
-    <ParallaxProvider>
-      <LandingContent />
-    </ParallaxProvider>
   );
 }

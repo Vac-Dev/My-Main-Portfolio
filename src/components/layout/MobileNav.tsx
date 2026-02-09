@@ -1,6 +1,6 @@
-import { Menu, X } from "lucide-react";
+import { ArrowLeft, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface MobileNavProps {
@@ -27,7 +27,14 @@ export default function MobileNav({ activePage }: MobileNavProps) {
   return (
     <div className="md:hidden">
       {/* Mobile top bar */}
-      <div className="sticky top-0 z-50 flex h-14 items-center justify-end border-b border-border bg-background/80 px-4 backdrop-blur-md">
+      <div className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-md">
+        <Link
+          to="/"
+          className="flex items-center gap-1.5 rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground"
+          title="Back to landing"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <button

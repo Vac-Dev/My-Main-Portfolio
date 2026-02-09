@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { MapPin, Mail, Github, Linkedin } from "lucide-react";
 
 export default function MobileSidebar() {
@@ -13,7 +14,9 @@ export default function MobileSidebar() {
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <h2 className="text-base font-semibold text-foreground">Kyle Nel</h2>
+          <Link to="/" className="text-base font-semibold text-foreground hover:underline">
+            Kyle Nel
+          </Link>
           <p className="text-sm text-muted-foreground">Full-Stack · Backend & APIs</p>
           <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">

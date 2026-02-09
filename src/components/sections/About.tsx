@@ -19,10 +19,11 @@ export default function About() {
 
       <div className="space-y-6 text-base leading-relaxed text-muted-foreground">
         <p>
-          I'm a full-stack developer and BSc IT student specializing in Application
-          Development, with a strong preference for backend, databases, and APIs. Day-to-day
-          I work at iCam Video Telematics building programs, websites, APIs, automations,
-          and reporting systems that give fleet managers a clear picture of their operations.
+          I'm a full-stack developer with a BSc in Computer & Information Sciences
+          (Application Development), with a strong preference for backend, databases,
+          and APIs. Day-to-day I work at iCam Video Telematics building programs,
+          websites, APIs, automations, and reporting systems that give fleet managers
+          a clear picture of their operations.
         </p>
 
         <p>
