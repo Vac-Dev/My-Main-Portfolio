@@ -1,31 +1,27 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
-import LandingPage from "@/pages/LandingPage";
-import MainLayout from "@/components/layout/MainLayout";
+import { Nav } from "@/components/Nav";
+import Hero from "@/components/sections/Hero";
+import Projects from "@/components/sections/Projects";
 import About from "@/components/sections/About";
-import Resume from "@/components/sections/Resume";
-import Portfolio from "@/components/sections/Portfolio";
-import Certifications from "@/components/sections/Certifications";
+import Journey from "@/components/sections/Journey";
 import Contact from "@/components/sections/Contact";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route element={<MainLayout />}>
-            <Route path="/about" element={<About />} />
-            <Route path="/resume" element={<Resume />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/certifications" element={<Certifications />} />
-            <Route path="/contact" element={<Contact />} />
-          </Route>
-          {/* Redirect /home to /about as default */}
-          <Route path="/home" element={<Navigate to="/about" replace />} />
-        </Routes>
-      </BrowserRouter>
+      <Nav />
+      <main>
+        <Hero />
+        <Projects />
+        <About />
+        <Journey />
+        <Contact />
+      </main>
+      <footer className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-5 pt-10 pb-12 text-sm text-muted-foreground sm:flex-row sm:justify-between sm:px-8">
+        <p>© {new Date().getFullYear()} Kyle Nel</p>
+        <p>Full-stack developer · Pretoria, South Africa</p>
+      </footer>
       <Toaster />
     </ThemeProvider>
   );

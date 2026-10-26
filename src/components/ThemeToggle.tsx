@@ -1,20 +1,33 @@
+import { AnimatePresence, motion } from "motion/react";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/ThemeProvider";
+import { spring } from "@/lib/motion";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="relative h-9 w-9 cursor-pointer"
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.88 }}
+      transition={spring}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="relative grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/8 hover:text-foreground"
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isDark ? "moon" : "sun"}
+          initial={{ opacity: 0, rotate: -70, scale: 0.5 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={{ opacity: 0, rotate: 70, scale: 0.5 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="grid place-items-center"
+        >
+          {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   );
 }
